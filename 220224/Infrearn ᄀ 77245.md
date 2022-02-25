@@ -1,0 +1,222 @@
+# Infrearn 강의
+
+# 스프링 입문
+
+- IntelliJ를 사용하기 추천.
+- Java 11 설치
+
+ 
+
+[https://spring.initial](https://spring.initial)ize.io
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled.png)
+
+요즘엔 Gradle project를 많이 사용한다!
+
+spring boot 의 버전 중 
+
+- snapshot은 아직 개발중
+- M1은 아직 정식 release되지 않은 버전이다.
+
+정식 발매된 버전 중 최신버전인 2.6.3 version을 이용하면,
+
+### Project meta에서
+
+Group은 기업의 그룹명
+
+Artifact는 프로젝트의 output이다. 
+
+Dependencies의 ADD DEPENDENCIES는 어떤 라이브러리를 사용할 지 정하는 것이다.
+
+- Spring Web
+- Thymeleaf
+
+를 가져와 주자
+
+이후 아래에 GENERATE를 선택해주면 다운로드가 진행된다.
+
+압축을 풀어주고, 
+
+IntelliJ에서 프로젝트 열기 → 폴더의 ‘build.gradle’ 선택 → “Open as a Project” 선택
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%201.png)
+
+해주면 
+
+처음 실행할 때는 라이브러리 수십 MB가 설치되기 시작한다.
+
+이후 IntelliJ 화면의 build.gradle은 
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%202.png)
+
+sourceCompatibility = “11” 은 자바 11버전이라는 뜻이고,
+
+dependencies에서 implementation은 처음 DEPENDENCIES에서 추가한 라이브러리들이 추가가 되어 있다
+
+.gitignore는 source코드를 관리할 수 있게 해준다!
+
+git에는 필요한 소스코드만 올라가고, build된 결과물 등이 올라가면 안되는데, 이걸 도와주는 파일이다
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%203.png)
+
+라이브러리가 설치되었다면 실행시켜보자!
+
+Hi-Spring ← 이렇게 이름지었더니 “HiSpringApplication” 이 생성되어 있다.
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%204.png)
+
+들어가보면 이미 몇 줄이 적혀있네..?
+
+실행시켜보면
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%205.png)
+
+다음과 같은 화면이 나오며 환영해준다.
+
+그런데, 아래 창에서
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%206.png)
+
+아래 “Tomcat이 8080포트로 WebServer를 시작했습니다” ?!?!
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%207.png)
+
+바로 들어가보니 “Whitelabel Error Page”가 뜬다. 
+
+→ 이게 **성공한 화면**이다
+
+에러가 성공이라고?!
+
+당연하지! 원래는 이 화면이 떠야하니까
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%208.png)
+
+# 2. Gradle 확인하기
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%209.png)
+
+## 👈여기
+
+intelliJ 화면 우측에서 Gradle을 확인할 수 있는데,
+
+Gradle은 처음 project를 만들 때 thymeleaf, Spring Web을 Dependencies 에 추가해 줬는데,
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2010.png)
+
+compileClasspath라는 곳에서 확인 할 수 있다.
+
+근데, 우리가 thymeleaf라는 라이브러리를 불러올때 띡 하나만 가져온게 아니라, **연쇄적으로 일어난다**
+
+> D 라는 라이브러리를 불러오기 위해서 C라는 라이브러리를 불러와야하고,
+C 라는 라이브러리를 불러오기 위해서 B라는 라이브러리를 불러와야하고,
+B 라는 라이브러리를 불러오기 위해서 A라는 라이브러리를 불러와야하고,
+> 
+
+이렇게, 우리가 thymeleaf, Spring Web를 불러왔지만,
+
+실은 그보다 훨씬 더 많은 라이브러리를 당겨온 셈이 된다!
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2011.png)
+
+thymeleaf를 눌러보면,
+
+thymeleaf를 불러오기 위해 먼저 당겨와야 하는 라이브러리를 나타낸다.
+
+# 3. View 환경설정하기
+
+> Welcome page를 만들어 보자
+> 
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2012.png)
+
+경로는 `**src→main→resources→static`** 이고, 여기에 index.html을 만들어준다.
+
+```html
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+Hello
+<a href="/hello">hello</a>
+</body>
+</html>
+```
+
+해당 내용들이 welcome page가 된다.
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2013.png)
+
+왼쪽 아래 부분에서 서버를 멈췄다가 다시 실행시키면, 
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2014.png)
+
+**welcome page가 뜬다!**
+
+> **`static/index.html`** 을 올려두면 Welcome page 기능을 제공한다.
+> 
+
+## **동적 페이지를 만드려면?**
+
+- **Thymeleaf를 사용해보자!**
+
+- [ ]  Controller를 만들자
+- Controller란? ⇒ 웹 애플리케이션의 첫 진입점
+1. hispring아래에 controller 패키지를 생성한다.(hi.hispring.controller)
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2015.png)
+
+1. HiController를 만들어준다.
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2016.png)
+
+1. 위에 @Controller 를 적어준다
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2017.png)
+
+1. 자동으로 import가 생성된다(띠용?!)
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2018.png)
+
+1. 웹 어플리케이션에서 “/hi” 가 들어오면 호출해주는 메소드
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2019.png)
+
+1. model.addAttribute(”data”, “hi!”); 하면 자동 완성되고, 
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2020.png)
+
+1. `**src → main → resources → templates` 경로에 hi.html 파일을 만들어준다.**
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2021.png)
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2022.png)
+
+`<html xmlns:th="http://www.thymeleaf.org">`  
+→ thymeleaf를 사용할 수 있게해준다. th는 thymeleaf의  th이다.
+
+`<p th:text="'안녕하세요. ' + ${data}" >안녕하세요. 손님</p>`
+→ ${data} 안의 data는 우리가 model.addAttribute에서 넣어준 attrributeName:”data” 이다.
+그 value가 “hi!”
+
+### 이대로 돌려보자!!
+
+[http://localhost:8080/h](http://localhost:8080/hello)i 에서 확인할 수 있다.
+
+![Untitled](Infrearn%20%E1%84%80%2077245/Untitled%2023.png)
+
+## 동작원리
+
+1. @GetMapping이 get 방식으로 ()안에 있는 ‘hi’ url과 매칭이 되어서 
+2. 이 controller에 있는 method가 실행된다.
+3. model에 data:hi 로 넣어놨다.
+4. ‘return “hi”; 를 해주는데, templates의 ‘(return 해준 같은 이름).html’ 에 가서 rendering해라’
+
+<aside>
+👉 컨트롤러에서 리턴 값으로 **문자를 반환**하면 뷰 리졸버( viewResolver )가 화면을 찾아서 처리한다. 
+스프링 부트 템플릿엔진 기본 viewName 매핑  
+resources:templates/ +{ViewName}+ .html
+
+</aside>
